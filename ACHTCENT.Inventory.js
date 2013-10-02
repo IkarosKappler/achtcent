@@ -15,7 +15,7 @@ ACHTCENT.Inventory = function( id ) {
     this.totalDepositValue      = 0;
     
     // TODO (no such class exists yet)
-    this.carriables             = [];
+    this.carriages              = [];
     this.totalCarryCapacity     = 0;
 
     // Decoration stuff    
@@ -52,15 +52,40 @@ ACHTCENT.Inventory.prototype.addItem = function( item ) {
 
     if( typeof item.getDepositValue == "function" ) {
 
-	this.addDepositable( item );
+	return this.addDepositable( item );
 
     } else if( typeof item.getCarryCapacity == "function" ) {
 
-	this.addCarriable( item );
+	return this.addCarriage( item );
 
     } else {
 
-	this.addBlingBling( item );
+	return this.addBlingBling( item );
+
+    }
+
+}
+
+/**
+ * Removes the passed item.
+ * There are three item types:
+ *   - depositables
+ *   - carriage containers
+ *   - bling blings
+ **/
+ACHTCENT.Inventory.prototype.removeItem = function( item ) {
+
+    if( typeof item.getDepositValue == "function" ) {
+
+	return this.removeDepositable( item );
+
+    } else if( typeof item.getCarryCapacity == "function" ) {
+
+	return this.removeCarriage( item );
+
+    } else {
+
+	return this.removeBlingBling( item );
 
     }
 
@@ -87,19 +112,96 @@ ACHTCENT.Inventory.prototype.addDepositable = function( depositable ) {
 }
 
 /**
+ * Removes the passed depositable and decreases the total deposit value.
+ **/
+ACHTCENT.Inventory.prototype.removeDepositable = function( depositable ) {
+
+    // Locate carriage by id
+    for( var i = 0; i < this.depositables.length; i++ ) {
+	
+	if( this.depositables[i].getID() == depositable.getID() )
+	    return this.removeDepositableAt(i);
+
+    }
+    
+    // Loop terminated -> element not found
+    return false;
+}
+
+/**
+ * Removes the depositable at the given array index and decreases the total deposit value.
+ **/
+ACHTCENT.Inventory.prototype.removeDepositableAt = function( index ) {
+
+    if( index < 0 || index >= this.depositables.length )
+	return false;
+
+    //window.alert( "Before: " + JSON.stringify(this.depositables) );
+    var depositable = this.depositables[ index ];
+    this.depositables.splice( index, 1 );
+    //window.alert( "After: " + JSON.stringify(this.depositables) );
+    
+    this.totalDepositValue = Math.max( 0, 
+				       this.totalDepositValue - depositable.getDepositValue() 
+				     );
+    
+    return true;
+}
+
+/**
  * Adds a new carryable to this inventory.
  * The passed item MUST have a getDepositValue() function.
  **/
-ACHTCENT.Inventory.prototype.addCarriable = function( carriable ) {
+ACHTCENT.Inventory.prototype.addCarriage = function( carriage ) {
 
     // Inventory capacity check?
     // ...
 
-    this.totalCarryCapacity += carriable.getCarryCapacity();
-    this.carriables.push( carriable );
+    this.totalCarryCapacity += carriage.getCarryCapacity();
+    this.carriages.push( carriage );
     
     return true;
 
+}
+
+/**
+ * Removes the passed carriage and decreases the total carry capacity.
+ **/
+ACHTCENT.Inventory.prototype.removeCarriage = function( carriage ) {
+
+    // Locate carriage by id
+    for( var i = 0; i < this.carriages.length; i++ ) {
+	
+	if( this.carriages[i].getID() == carriage.getID() )
+	    return this.removeCarriageAt(i);
+
+    }
+    
+    // Loop terminated -> element not found
+    return false;
+}
+
+/**
+ * Removes the carriage at the given array index and decreases the total carry capacity.
+ **/
+ACHTCENT.Inventory.prototype.removeCarriageAt = function( index ) {
+
+    if( index < 0 || index >= this.carriages.length )
+	return false;
+
+    var carriage = this.carriages[ index ];
+    this.carriages.splice( index, 1 );
+    
+    this.totalCarryCapacity = Math.max( 0, 
+					this.totalCarryCapacity - carriage.getCarryCapacity() 
+				      );
+
+    // Drop depositables that do not fit!
+    while( this.depositables.length > this.totalCarryCapacity ) {
+	this.removeDepositableAt( this.depositables.length-1 );
+    }
+    
+    return true;
 }
 
 ACHTCENT.Inventory.prototype.addBlingBling = function( blingBling ) {
@@ -113,6 +215,35 @@ ACHTCENT.Inventory.prototype.addBlingBling = function( blingBling ) {
 
 }
 
+/**
+ * Removes the passed bling bling.
+ **/
+ACHTCENT.Inventory.prototype.removeBlingBling = function( blingBling ) {
+
+    // Locate carriage by id
+    for( var i = 0; i < this.blingBlings.length; i++ ) {
+	
+	if( this.blingBlings[i].getID() == blingbling.getID() )
+	    return this.removeBlingBlingAt(i);
+
+    }
+    
+    // Loop terminated -> element not found
+    return false;
+}
+
+/**
+ * Removes the bling bling at the given array index.
+ **/
+ACHTCENT.Inventory.prototype.removeBlingBlingAt = function( index ) {
+
+    if( index < 0 || index >= this.blingBlings.length )
+	return false;
+
+    this.blingBlingss.splice( index, 1 );   
+    return true;
+}
+
 
 
 ACHTCENT.Inventory.prototype.__getClassName = function() {
@@ -124,7 +255,7 @@ ACHTCENT.Inventory.prototype.__toString = function() {
 	"id=" + this.getID() + 
 	", depositables.length=" + this.depositables.length + 
 	", totalDepositValue=" + this.totalDepositValue + 
-	", carriables.length=" + this.carriables.length + 
+	", carriages.length=" + this.carriages.length + 
 	", totalCarryCapacity=" + this.totalCarryCapacity + 
 	", blingBlings.length=" + this.blingBlings.length +
 	" }";

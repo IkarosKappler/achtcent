@@ -34,7 +34,8 @@ body {
 
   // Create a dummy bag with capacity=4 (no class implemented yet)
   var bag = { 
-              getCarryCapacity: function() { return 4; } 
+              getCarryCapacity: function() { return 4; },
+              getID:            function() { return 12345; }
   };
   
   document.write( "Adding a bag to inventory ...<br/>\n" );
@@ -59,6 +60,14 @@ body {
   
   document.write( "Trying to add bottle8 to inventory (should fail) ...<br/>\n" );
   inventory.addItem( bottle8 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Removing bottle16 from inventory ...<br/>\n" );
+  inventory.removeItem( bottle16 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Removing bag from inventory (should also remove bottles) ...<br/>\n" );
+  inventory.removeItem( bag );
   document.write( inventory.__toString() + "<br/>\n" );
 
 </script>
