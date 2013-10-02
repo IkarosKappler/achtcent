@@ -1,0 +1,13 @@
+/**
+ * @author Ikaros Kappler
+ * @date 2013-10-02
+ * @version 1.0.0
+ **/
+
+// Constructor
+ACHTCENT.Object = function() { }
+
+
+// Define prototype
+ACHTCENT.Object.prototype = new ACHTCENT.Object();
+ACHTCENT.Object.prototype.constructor = ACHTCENT.Object;

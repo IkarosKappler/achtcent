@@ -1,0 +1,16 @@
+/**
+ * @author Ikaros Kappler
+ * @date 2013-10-02
+ * @version 1.0.0
+ **/
+
+// The constructor
+ACHTCENT.Bottle8 = function( id ) {
+    
+    ACHTCENT.Depositable.call();
+
+    this.setID( id )
+    this.setName( "bottle(8)" );
+    this.setDepositValue( 8 );
+
+}

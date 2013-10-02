@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html> 
+<head> 
+<title>ACHTCENT Javascripts/prototypes</title> 
+<meta charset="UTF-8">
+<style>
+body {
+    font-family: Monospace;
+}
+</style>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.js"></script>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.Object.js"></script>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.Depositable.js"></script>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.Bottle8.js"></script>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.Bottle16.js"></script>
+<script language="Javascript" type="text/javascript" src="ACHTCENT.Inventory.js"></script>
+</head>
+
+<body>
+
+<script language="Javascript">
+
+  //var bottle = new ACHTCENT.Depositable( 1000 );
+
+  var bottle8 = new ACHTCENT.Bottle8( 1001 );
+  document.write( bottle8.__toString() + "<br/>\n" );
+
+  var bottle16 = new ACHTCENT.Bottle16( 1002 );
+  document.write( bottle16.__toString() + "<br/>\n" );
+  
+  document.write( "Creating new inventory ...<br/>\n" );
+  var inventory = new ACHTCENT.Inventory( 9001 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  // Create a dummy bag with capacity=4 (no class implemented yet)
+  var bag = { 
+              getCarryCapacity: function() { return 4; } 
+  };
+  
+  document.write( "Adding a bag to inventory ...<br/>\n" );
+  inventory.addItem( bag );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Adding bottle8 to inventory ...<br/>\n" );
+  inventory.addItem( bottle8 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Adding bottle8 to inventory ...<br/>\n" );
+  inventory.addItem( bottle8 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Adding bottle16 to inventory ...<br/>\n" );
+  inventory.addItem( bottle16 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+  document.write( "Adding bottle8 to inventory ...<br/>\n" );
+  inventory.addItem( bottle8 );
+  document.write( inventory.__toString() + "<br/>\n" );
+  
+  document.write( "Trying to add bottle8 to inventory (should fail) ...<br/>\n" );
+  inventory.addItem( bottle8 );
+  document.write( inventory.__toString() + "<br/>\n" );
+
+</script>
+
+
+</body>
+</html>
